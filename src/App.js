@@ -7,7 +7,8 @@ class Inputs extends Component {
 
   state = {
     web: 0,
-    ebay: 0
+    ebay: 0,
+    nombreArchivo: ''
   }
 
   makeRequest = async (file) => {
@@ -15,13 +16,15 @@ class Inputs extends Component {
     const body = new FormData();
     body.append('file', file);
 
+
     try {
       const { data } = await axios({
         method: 'POST',
-        url: 'http://192.168.100.4:3001/api/automata',
+        url: 'http://192.168.1.78:3001/api/automata',
         data: body,
       });
 
+  
       this.setState({ web: data.results.web, ebay: data.results.ebay });
 
     } catch (error) {
@@ -39,14 +42,14 @@ class Inputs extends Component {
 
     this.makeRequest(file);
 
-  }
+    const nombre = {
+      name: file.name
+    }
 
-
-  file = () => {
     this.setState({
-      web: this.state.web + 1,
-      ebay: this.state.ebay + 1
+      nombreArchivo: nombre.name
     })
+
   }
 
 
@@ -75,10 +78,20 @@ class Inputs extends Component {
                   <input type="file" className={'styleInput'} onChange={this.getFile}></input>
                 </div>
 
+                <span>{this.state.nombreArchivo}</span>
+
                 <div className={'resultados'}>
                   <h2>Resultados</h2> 
-                  <p><span style={{fontWeight: 'bold'}}>web:</span> {this.state.web}</p>
-                  <p><span style={{fontWeight: 'bold'}}>ebay:</span> {this.state.ebay}</p>
+                  <div className={'textos-resultados'}>
+                    <div className={'web'}>
+                      <span>web</span> 
+                      <p>{this.state.web}</p>
+                    </div>
+                    <div className={'ebay'}>
+                        <span>ebay</span>
+                        <p>{this.state.ebay}</p>
+                    </div>
+                  </div>
                 </div>
 
             </div>

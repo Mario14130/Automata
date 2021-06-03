@@ -1,4 +1,4 @@
-import logo from './logo.svg';
+import axios from 'axios';
 import './App.css';
 import { Component } from 'react';
 
@@ -8,6 +8,37 @@ class Inputs extends Component {
   state = {
     web: 0,
     ebay: 0
+  }
+
+  makeRequest = async (file) => {
+
+    const body = new FormData();
+    body.append('file', file);
+
+    try {
+      const { data } = await axios({
+        method: 'POST',
+        url: 'http://192.168.100.4:3001/api/automata',
+        data: body,
+      });
+
+      this.setState({ web: data.results.web, ebay: data.results.ebay });
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  getFile = (event) => {
+    const [file] = event.target.files;
+
+    if (file.type !== 'text/plain') {
+      alert('Solo se aceptan archivos .txt');
+      return;
+    }
+
+    this.makeRequest(file);
+
   }
 
 
@@ -66,11 +97,11 @@ class Inputs extends Component {
     return(
       <div style={body}>
         <div style={contenedor}>
-        {/* <button onClick={this.file}>Button</button> */}
+        {/* { <button onClick={this.makeRequest}>Button</button>} */}
 
           <div style={estilosNumero}>
 
-            <input type="file" style={styleInput}></input>
+            <input type="file" style={styleInput} onChange={this.getFile}></input>
             
           </div>
 
